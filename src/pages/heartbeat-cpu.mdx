@@ -1,0 +1,21 @@
+---
+layout: ../layouts/ExhibitLayout.astro
+title: "The Heartbeat of the CPU"
+---
+
+import InstinctGame from '../components/InstinctGame.jsx';
+import FdeDiagram from '../components/FdeDiagram.jsx';
+
+# Inside the Fetch-Decode-Execute Cycle
+
+Welcome to our exhibit! Before we look at the complex wires and registers inside a processing core, let's see how strong your baseline computer intuition is. 
+
+<InstinctGame client:load />
+
+---
+
+## 🧭 Phase A: Mapping it to the Hardware
+
+Now that you've got the real-world intuition down, let's look at how the actual silicon handles this. Click the stages below to follow the electrical flow through the registers.
+
+<FdeDiagram client:load />
