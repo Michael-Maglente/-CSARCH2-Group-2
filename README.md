@@ -8,7 +8,6 @@ A virtual exhibit teaching visitors how a CPU processes instructions through the
 - Simon Gabriel Kabiling
 - Michael Stephen Maglente
 - Atreuz Patrick Malicsi
-- Christopher Vincent Soriano
 
 ## Topic
 
