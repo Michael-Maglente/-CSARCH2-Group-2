@@ -3,6 +3,7 @@ import InstinctGame from './InstinctGame.jsx';
 import FdeDiagram from './FdeDiagram.jsx';
 import CulminatingActivity from './CulminatingActivity.jsx';
 import FdeTheoryRoom from './FdeTheoryRoom.jsx';
+import CitationsPanel from './CitationsPanel.jsx';
 
 // Import the pre-rendered movie-accurate warp audio file
 import warpSoundUrl from '../assets/warpsound.mp3';
@@ -272,6 +273,8 @@ export default function ExhibitTerminalWrapper() {
             </div>
             
             <CulminatingActivity />
+
+            <CitationsPanel />
         </div>
     );
 }
