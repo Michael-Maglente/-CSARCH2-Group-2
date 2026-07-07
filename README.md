@@ -73,3 +73,47 @@ One of our biggest realizations during development was that building an educatio
 ### Things Learned
 
 Throughout the development process, we gained a deeper understanding of both the technical and design aspects of building an interactive educational website. Beyond learning how Astro, React, and MDX work together, we also learned the importance of planning features carefully, collaborating as a team, and continuously refining ideas through discussion and testing. The project reinforced the value of iterative development, where starting with a simple working version and improving it over time leads to a more polished and effective final product.
+
+## Future Improvements ##
+
+Although the current exhibit successfully demonstrates the Fetch–Decode–Execute cycle through interactive activities, there are several improvements that could further enhance the overall learning experience.
+
+### User Experience (UX) 
+
+We plan to further improve the user interface by making navigation more intuitive and reducing the number of clicks required to access different sections. Additional visual cues, smoother transitions, and clearer instructions can help visitors understand each activity more easily, especially first-time users.
+
+### Learning Flow and Content Sequence
+
+The current sequence follows the learning objectives of the exhibit, but it can still be refined. Future versions may introduce concepts in smaller, more gradual steps so visitors build their understanding before moving on to more advanced interactions. Additional explanations, summaries, and progress indicators could also help reinforce learning throughout the exhibit.
+
+### Expanded Interactive Activities
+
+The existing interactive elements provide hands-on learning, but additional activities could make the exhibit even more engaging. Possible additions include:
+
+- Interactive memory access simulations
+- Additional drag-and-drop exercises
+- Timed challenges
+- Achievement badges or completion rewards
+- Step-by-step guided walkthroughs using basic concepts for beginners 
+
+### Increased Quiz Replayability
+
+Currently, the quiz serves as a review of the concepts presented throughout the exhibit. Future improvements include expanding the question pool with many more randomized questions so users receive different challenges each time they attempt the quiz. This would encourage repeated practice while reinforcing their understanding of the Fetch–Decode–Execute cycle.
+
+### Performance Optimization
+
+As more interactive components are added, optimizing performance will become increasingly important. Future work may focus on reducing loading times, improving responsiveness across devices, optimizing images and assets, and minimizing unnecessary rendering to provide a smoother user experience.
+
+---
+
+## AI Usage Disclaimer ##
+
+Artificial intelligence tools were used throughout the development process as supporting resources rather than as replacements for the group's work. AI-assisted tools were primarily used to:
+
+- Review code for potential syntax errors and implementation issues.
+- Explain unfamiliar programming concepts and framework features.
+- Suggest possible improvements to code readability and structure.
+- Assist with grammar checking and improving the clarity of documentation.
+- Help verify that written explanations remained clear and technically accurate.
+
+All project planning, design decisions, implementation, testing, debugging, and final content were completed and reviewed by the group members. AI-generated suggestions were evaluated, modified when necessary, and only incorporated when they aligned with the educational objectives and project requirements.
