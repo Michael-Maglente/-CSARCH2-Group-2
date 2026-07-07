@@ -106,6 +106,13 @@ As more interactive components are added, optimizing performance will become inc
 
 ---
 
+## Deployment ##
+
+The exhibit is deployed and publicly accessible via **Netlify** at:
+[https://csarch-2-g4-s40.netlify.app/](https://csarch-2-g4-s40.netlify.app/)
+
+---
+
 ## AI Usage Disclaimer ##
 
 Artificial intelligence tools were used throughout the development process as supporting resources rather than as replacements for the group's work. AI-assisted tools were primarily used to:
