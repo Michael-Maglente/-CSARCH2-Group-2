@@ -5,6 +5,6 @@ import icon from 'astro-icon';
 
 export default defineConfig({
   integrations: [mdx(), react(), icon()],
-  site: 'https://csarch2-group2.pages.dev',
+  site: 'https://csarch2-g4-s40.pages.dev',
 });
 
