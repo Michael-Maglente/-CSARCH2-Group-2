@@ -1,87 +1,66 @@
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
 
-/* TRON MAINFRAME PALETTE SHIFT */
-:root {
-    --accent: #00bafa !important;       /* Grid Light-Cycle Neon Cyan */
-    --bg1: #020204 !important;          /* Void Outer Space Black */
-    --bg2: #05080c !important;          /* Mainframe Box Dark Slate Blue */
-    --text: #c0f3ff !important;         /* Phosphor Text Glow */
-    --muted: #537a85 !important;        /* Suppressed Terminal Matrix Labels */
-    --border: #004d66 !important;       /* Low-frequency Laser Conduit */
-    --radius: 4px !important;           /* Industrial Block Terminals */
+/* TRON THEME — scoped under .tron-theme to avoid global leakage */
+.tron-theme {
+    --accent: #00bafa;
+    --bg1: #020204;
+    --bg2: #05080c;
+    --text: #c0f3ff;
+    --muted: #537a85;
+    --border: #004d66;
+    --radius: 4px;
+
+    background: #020204;
+    background-image: radial-gradient(#002b3d 0.5px, transparent 0.5px);
+    background-size: 24px 24px;
+    font-family: 'JetBrains Mono', monospace;
+
+    padding: 20px;
+    border-radius: 8px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
-/* GLOBAL CRT DISPLAY LAYOUT */
-html, body {
-    background: #020204 !important;
-    background-image: radial-gradient(#002b3d 0.5px, transparent 0.5px) !important;
-    background-size: 24px 24px !important;
-    font-family: 'JetBrains Mono', monospace !important;
+.tron-theme .content__block,
+.tron-theme .toc {
+    background: #05080c;
+    border: 1px solid #004d66;
+    box-shadow: 0 0 15px rgba(0, 186, 250, 0.08);
+    border-radius: 4px;
 }
 
-.content__block, .toc {
-    background: #05080c !important;
-    border: 1px solid #004d66 !important;
-    box-shadow: 0 0 15px rgba(0, 186, 250, 0.08) !important;
-    border-radius: 4px !important;
+.tron-theme h1,
+.tron-theme h2,
+.tron-theme h3 {
+    font-family: 'JetBrains Mono', monospace;
 }
 
-/* HEADERS AS COMMAND LOGS */
-main > div > .content__titlemeta h1,
-header.header strong,
-.article > h1 {
-    font-family: 'JetBrains Mono', monospace !important;
-    font-weight: 700 !important;
-    text-transform: uppercase !important;
-    letter-spacing: 1px !important;
-    color: #00bafa !important;
-    text-shadow: 0 0 8px rgba(0, 186, 250, 0.6) !important;
+.tron-theme h1 {
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #00bafa;
+    text-shadow: 0 0 8px rgba(0, 186, 250, 0.6);
 }
 
-.article > h2, .toc h2 {
-    font-family: 'JetBrains Mono', monospace !important;
-    font-weight: 500 !important;
-    color: #febe0b !important; /* Grid Warning Amber */
-    text-shadow: 0 0 6px rgba(254, 190, 11, 0.4) !important;
-    border-bottom: 1px dashed #004d66 !important;
+.tron-theme h2 {
+    font-weight: 500;
+    color: #febe0b;
+    text-shadow: 0 0 6px rgba(254, 190, 11, 0.4);
+    border-bottom: 1px dashed #004d66;
     padding-bottom: 0.5rem;
     text-transform: uppercase;
 }
 
-.article > p, .toc__item a, .header__subtitle {
-    font-family: 'JetBrains Mono', monospace !important;
-    color: #c0f3ff !important;
+.tron-theme p,
+.tron-theme a {
+    font-family: 'JetBrains Mono', monospace;
+    color: #c0f3ff;
 }
 
-/* TERMINAL DECORATION SEPARATORS */
-hr {
-    border: none !important;
-    height: 1px !important;
-    background: repeating-linear-gradient(90deg, #004d66, #004d66 4px, transparent 4px, transparent 8px) !important;
-    margin: 40px 0 !important;
-}
-
-/* FORCE ASTRO'S MAIN CONTAINER TO FULL WIDTH AND CENTERED */
-main {
-    width: 100% !important;
-    max-width: 100vw !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-}
-
-/* Ensure the inner article block also spans correctly */
-.article {
-    width: 100% !important;
-    max-width: 1000px !important; /* Matches our Wrapper max-width */
-    margin: 0 auto !important;
-    padding: 20px !important;
-    box-sizing: border-box !important;
-}
-
-/* Remove sidebars or grid offsets if the layout is using CSS Grid */
-.layout {
-    display: block !important;
+.tron-theme hr {
+    border: none;
+    height: 1px;
+    background: repeating-linear-gradient(90deg, #004d66, #004d66 4px, transparent 4px, transparent 8px);
+    margin: 40px 0;
 }

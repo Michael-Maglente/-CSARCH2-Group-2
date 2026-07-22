@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
-import InstinctGame from './InstinctGame.jsx';
-import FdeDiagram from './FdeDiagram.jsx';
-import CulminatingActivity from './CulminatingActivity.jsx';
-import FdeTheoryRoom from './FdeTheoryRoom.jsx';
-import CitationsPanel from './CitationsPanel.jsx';
+import CPUHeartbeat_Group2_InstinctGame from './CPUHeartbeat_Group2_InstinctGame.jsx';
+import CPUHeartbeat_Group2_FdeDiagram from './CPUHeartbeat_Group2_FdeDiagram.jsx';
+import CPUHeartbeat_Group2_CulminatingActivity from './CPUHeartbeat_Group2_CulminatingActivity.jsx';
+import CPUHeartbeat_Group2_FdeTheoryRoom from './CPUHeartbeat_Group2_FdeTheoryRoom.jsx';
+import CPUHeartbeat_Group2_CitationsPanel from './CPUHeartbeat_Group2_CitationsPanel.jsx';
 
 // Import the pre-rendered movie-accurate warp audio file
 import warpSoundUrl from '../assets/warpsound.mp3';
@@ -229,7 +229,7 @@ export default function ExhibitTerminalWrapper() {
                 </p>
             </div>
 
-            <InstinctGame triggerTrackDirectly={true} />
+            <CPUHeartbeat_Group2_InstinctGame triggerTrackDirectly={true} />
 
             <hr style={{ border: 'none', height: '1px', background: 'repeating-linear-gradient(90deg, #004d66, #004d66 4px, transparent 4px, transparent 8px)', margin: '50px 0', width: '100%' }} />
 
@@ -242,7 +242,7 @@ export default function ExhibitTerminalWrapper() {
                 <p style={{ color: '#c0f3ff', margin: 0, lineHeight: '1.6', marginBottom: '20px' }}>
                     &gt; Hardware logic requires precision. Review the architecture briefing below and submit the correct system flags to proceed.
                 </p>
-                <FdeTheoryRoom />
+                <CPUHeartbeat_Group2_FdeTheoryRoom />
             </div>
 
             <hr style={{ border: 'none', height: '1px', background: 'repeating-linear-gradient(90deg, #004d66, #004d66 4px, transparent 4px, transparent 8px)', margin: '50px 0', width: '100%' }} />
@@ -256,7 +256,7 @@ export default function ExhibitTerminalWrapper() {
                 <p style={{ color: '#c0f3ff', margin: 0, lineHeight: '1.6', marginBottom: '20px' }}>
                     &gt; Now that you've aligned the real-world operational cycles, analyze how custom logic gates process these streams. Select the stages below to track trace currents through the hardware buses.
                 </p>
-                <FdeDiagram />
+                <CPUHeartbeat_Group2_FdeDiagram />
             </div>
 
             <hr style={{ border: 'none', height: '1px', background: 'repeating-linear-gradient(90deg, #004d66, #004d66 4px, transparent 4px, transparent 8px)', margin: '50px 0', width: '100%' }} />
@@ -272,9 +272,9 @@ export default function ExhibitTerminalWrapper() {
                 </p>
             </div>
             
-            <CulminatingActivity />
+            <CPUHeartbeat_Group2_CulminatingActivity />
 
-            <CitationsPanel />
+            <CPUHeartbeat_Group2_CitationsPanel />
         </div>
     );
 }
