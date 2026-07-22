@@ -8,6 +8,10 @@ import CPUHeartbeat_Group2_CitationsPanel from './CPUHeartbeat_Group2_CitationsP
 // Import the pre-rendered movie-accurate warp audio file
 import warpSoundUrl from '../assets/warpsound.mp3';
 
+import tronThemeCss from '../styles/theme-cyber.css?inline';
+
+const TRON_FONT_URL = 'https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap';
+
 const INITIAL_LINES = [
     { text: "[!] ENCOM OS v2.1.13 - LAB TERMINAL SYSTEM", color: "#febe0b" },
     { text: "> L3_SYSTEM_ENGINES: ACTIVE", color: "#537a85" },
@@ -17,6 +21,23 @@ const INITIAL_LINES = [
 ];
 
 export default function ExhibitTerminalWrapper() {
+    // Inject Tron theme CSS into document head on mount
+    useEffect(() => {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = TRON_FONT_URL;
+        document.head.appendChild(link);
+
+        const style = document.createElement('style');
+        style.textContent = tronThemeCss;
+        document.head.appendChild(style);
+
+        return () => {
+            link.remove();
+            style.remove();
+        };
+    }, []);
+
     // STATES: STANDBY (Click to wake), TYPING (Animating), IDLE (Waiting for input), BOOTING, ONLINE
     const [gridStatus, setGridStatus] = useState('STANDBY'); 
     
