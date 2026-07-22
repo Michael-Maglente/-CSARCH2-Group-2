@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import CPUHeartbeat_Group2_InstinctGame from './CPUHeartbeat_Group2_InstinctGame.jsx';
 import CPUHeartbeat_Group2_FdeDiagram from './CPUHeartbeat_Group2_FdeDiagram.jsx';
 import CPUHeartbeat_Group2_CulminatingActivity from './CPUHeartbeat_Group2_CulminatingActivity.jsx';
@@ -7,6 +8,7 @@ import CPUHeartbeat_Group2_CitationsPanel from './CPUHeartbeat_Group2_CitationsP
 
 // Import the pre-rendered movie-accurate warp audio file
 import warpSoundUrl from '../assets/warpsound.mp3';
+import tronTrackUrl from '../assets/The Son of Flynn.mp3';
 
 import tronThemeCss from '../styles/theme-cyber.css?inline';
 
@@ -40,6 +42,7 @@ export default function ExhibitTerminalWrapper() {
 
     // STATES: STANDBY (Click to wake), TYPING (Animating), IDLE (Waiting for input), BOOTING, ONLINE
     const [gridStatus, setGridStatus] = useState('STANDBY'); 
+    const [refsOpen, setRefsOpen] = useState(false);
     
     // CLI State
     const [inputValue, setInputValue] = useState('');
@@ -47,6 +50,9 @@ export default function ExhibitTerminalWrapper() {
     
     const inputRef = useRef(null);
     const audioCtxRef = useRef(null);
+    const ambientAudioRef = useRef(null);
+    const [isAmbientPlaying, setIsAmbientPlaying] = useState(false);
+    const [headerEl, setHeaderEl] = useState(null);
 
     // Auto-focus input when animation finishes
     useEffect(() => {
@@ -104,6 +110,35 @@ export default function ExhibitTerminalWrapper() {
             console.error("Failed to load or play warp asset file:", e);
         }
     };
+
+    // --- AUDIO: AMBIENT MUSIC (Daft Punk) ---
+    const toggleAmbientMusic = () => {
+        try {
+            if (!ambientAudioRef.current) {
+                const audio = new Audio(tronTrackUrl);
+                audio.loop = true;
+                audio.volume = 0.25;
+                ambientAudioRef.current = audio;
+            }
+            const track = ambientAudioRef.current;
+            if (isAmbientPlaying) {
+                track.pause();
+                setIsAmbientPlaying(false);
+            } else {
+                track.play().then(() => setIsAmbientPlaying(true)).catch(() => {});
+            }
+        } catch(e){}
+    };
+
+    useEffect(() => {
+        return () => {
+            if (ambientAudioRef.current) ambientAudioRef.current.pause();
+        };
+    }, []);
+
+    useEffect(() => {
+        setHeaderEl(document.querySelector('.header__titleblock'));
+    }, []);
 
     // --- ANIMATION: LINE-BY-LINE TYPEWRITER ---
     const startTypingSequence = async () => {
@@ -236,31 +271,98 @@ export default function ExhibitTerminalWrapper() {
 
     // 4. THE MAIN EXHIBIT CONTENT FLOW
     return (
-        <div style={{ fontFamily: '"JetBrains Mono", "Courier New", monospace', marginTop: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', maxWidth: '1000px', margin: '0 auto', padding: '0 20px', boxSizing: 'border-box' }}>
+        <div style={{ fontFamily: '"JetBrains Mono", "Courier New", monospace', marginTop: '60px', display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', maxWidth: '1000px', margin: '60px auto 0 auto', padding: '0 20px', boxSizing: 'border-box', overflow: 'hidden' }}>
+            
+            {/* STICKY NAVIGATION PROGRESS BAR */}
+            {typeof document !== 'undefined' && createPortal(
+                <nav style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 99998, background: 'rgba(2, 2, 4, 0.95)', borderBottom: '1px solid #004d66', padding: '6px 10px', backdropFilter: 'blur(8px)' }}>
+                    <style>{`
+                        @media (max-width: 480px) {
+                            .nav-progress { gap: 4px !important; font-size: 0.55rem !important; padding: 2px 0 !important; }
+                            .nav-progress span { display: none !important; }
+                            .nav-progress a { padding: 3px 5px !important; }
+                        }
+                    `}</style>
+                    <div className="nav-progress" style={{ display: 'flex', justifyContent: 'center', gap: '16px', flexWrap: 'wrap', fontFamily: '"JetBrains Mono", monospace', fontSize: '0.65rem' }}>
+                        <a href="#phase-1-intuition" style={{ color: '#00bafa', textDecoration: 'none', padding: '3px 6px', border: '1px solid transparent', transition: 'all 0.2s' }} onMouseOver={(e) => { e.target.style.borderColor = '#00bafa'; }} onMouseOut={(e) => { e.target.style.borderColor = 'transparent'; }}>
+                            01 INTUITION
+                        </a>
+                        <span style={{ color: '#004d66' }}>|</span>
+                        <a href="#phase-2-theory" style={{ color: '#00bafa', textDecoration: 'none', padding: '3px 6px', border: '1px solid transparent', transition: 'all 0.2s' }} onMouseOver={(e) => { e.target.style.borderColor = '#00bafa'; }} onMouseOut={(e) => { e.target.style.borderColor = 'transparent'; }}>
+                            02 THEORY
+                        </a>
+                        <span style={{ color: '#004d66' }}>|</span>
+                        <a href="#phase-3-diagram" style={{ color: '#00bafa', textDecoration: 'none', padding: '3px 6px', border: '1px solid transparent', transition: 'all 0.2s' }} onMouseOver={(e) => { e.target.style.borderColor = '#00bafa'; }} onMouseOut={(e) => { e.target.style.borderColor = 'transparent'; }}>
+                            03 DIAGRAM
+                        </a>
+                        <span style={{ color: '#004d66' }}>|</span>
+                        <a href="#phase-4-challenge" style={{ color: '#00bafa', textDecoration: 'none', padding: '3px 6px', border: '1px solid transparent', transition: 'all 0.2s' }} onMouseOver={(e) => { e.target.style.borderColor = '#00bafa'; }} onMouseOut={(e) => { e.target.style.borderColor = 'transparent'; }}>
+                            04 CHALLENGE
+                        </a>
+                        <span style={{ color: '#004d66' }}>|</span>
+                        <a href="#references" onClick={() => setRefsOpen(true)} style={{ color: '#00bafa', textDecoration: 'none', padding: '3px 6px', border: '1px solid transparent', transition: 'all 0.2s' }} onMouseOver={(e) => { e.target.style.borderColor = '#00bafa'; }} onMouseOut={(e) => { e.target.style.borderColor = 'transparent'; }}>
+                            05 REFS
+                        </a>
+                    </div>
+                </nav>,
+                document.body
+            )}
+            
+            {headerEl && createPortal(
+                <button 
+                    onClick={toggleAmbientMusic}
+                    style={{
+                        background: isAmbientPlaying ? 'rgba(0, 186, 250, 0.1)' : 'transparent',
+                        border: `1px solid ${isAmbientPlaying ? '#00bafa' : '#004d66'}`,
+                        borderRadius: '2px',
+                        color: isAmbientPlaying ? '#00bafa' : '#537a85',
+                        padding: '4px 10px',
+                        fontSize: '0.7rem',
+                        cursor: 'pointer',
+                        fontFamily: '"JetBrains Mono", "Courier New", monospace',
+                        whiteSpace: 'nowrap',
+                        marginLeft: '8px'
+                    }}
+                >
+                    {isAmbientPlaying ? "[🎛️ CORES LINKED: SON OF FLYNN]" : "[🔇 STREAM IDLE]"}
+                </button>,
+                headerEl
+            )}
             
             <div style={{ width: '100%', borderBottom: '1px dashed #004d66', paddingBottom: '20px', marginBottom: '30px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '10px' }}>
+                <style>{`
+                    @media (max-width: 600px) {
+                        .intro-title { font-size: 1.1rem !important; }
+                        .intro-text { font-size: 0.8rem !important; }
+                        .phase-heading { font-size: 1rem !important; }
+                        .phase-subheading { font-size: 0.8rem !important; }
+                        .phase-description { font-size: 0.78rem !important; }
+                    }
+                `}</style>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '10px', flexWrap: 'wrap' }}>
                     <span style={{ color: '#febe0b', fontWeight: 'bold', fontSize: '1.2rem' }}>flynn@mcp:~$</span>
-                    <h1 style={{ color: '#00bafa', margin: 0, fontSize: '1.5rem', textTransform: 'uppercase', letterSpacing: '1px' }}>
+                    <h1 className="intro-title" style={{ color: '#00bafa', margin: 0, fontSize: '1.5rem', textTransform: 'uppercase', letterSpacing: '1px' }}>
                         ./execute_fde_core.sh
                     </h1>
                 </div>
-                <p style={{ color: '#c0f3ff', margin: '15px 0 0 0', lineHeight: '1.6' }}>
-                    &gt; Welcome to the Grid mainframe. Before exploring the complex hardware routing registers inside processing systems, let's observe how strong your baseline architecture intuition is.
+                <p className="intro-text" style={{ color: '#c0f3ff', margin: '15px 0 0 0', lineHeight: '1.6' }}>
+                    &gt; Welcome to the Grid mainframe. Your CPU executes billions of Fetch-Decode-Execute cycles every second. Think of it like a chef in a kitchen: first they <strong style={{ color: '#00bafa' }}>FETCH</strong> the recipe card (instruction) from the shelf (memory), then they <strong style={{ color: '#8338ec' }}>DECODE</strong> what ingredients and steps are needed, and finally they <strong style={{ color: '#fe006f' }}>EXECUTE</strong> by chopping, mixing, and cooking. Let's explore each stage together.
                 </p>
             </div>
 
-            <CPUHeartbeat_Group2_InstinctGame triggerTrackDirectly={true} />
+            <div id="phase-1-intuition" style={{ width: '100%' }}>
+                <CPUHeartbeat_Group2_InstinctGame triggerTrackDirectly={true} isAmbientPlaying={isAmbientPlaying} toggleAmbientMusic={toggleAmbientMusic} />
+            </div>
 
             <hr style={{ border: 'none', height: '1px', background: 'repeating-linear-gradient(90deg, #004d66, #004d66 4px, transparent 4px, transparent 8px)', margin: '50px 0', width: '100%' }} />
 
-            {/* TASK 1: THE CTF THEORY ROOM */}
-            <div style={{ width: '100%', marginBottom: '30px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '15px' }}>
-                    <span style={{ color: '#febe0b', fontWeight: 'bold', fontSize: '1.1rem' }}>flynn@mcp:~/phase_1$</span>
-                    <h2 style={{ color: '#00bafa', margin: 0, fontSize: '1.2rem' }}>./read_briefing.sh</h2>
+            {/* PHASE 2: THE THEORY BRIEFING */}
+            <div id="phase-2-theory" style={{ width: '100%', marginBottom: '30px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '15px', flexWrap: 'wrap' }}>
+                    <span className="phase-subheading" style={{ color: '#febe0b', fontWeight: 'bold', fontSize: '1.1rem' }}>flynn@mcp:~/phase_2$</span>
+                    <h2 className="phase-heading" style={{ color: '#00bafa', margin: 0, fontSize: '1.2rem' }}>./read_briefing.sh</h2>
                 </div>
-                <p style={{ color: '#c0f3ff', margin: 0, lineHeight: '1.6', marginBottom: '20px' }}>
+                <p className="phase-description" style={{ color: '#c0f3ff', margin: 0, lineHeight: '1.6', marginBottom: '20px' }}>
                     &gt; Hardware logic requires precision. Review the architecture briefing below and submit the correct system flags to proceed.
                 </p>
                 <CPUHeartbeat_Group2_FdeTheoryRoom />
@@ -268,34 +370,34 @@ export default function ExhibitTerminalWrapper() {
 
             <hr style={{ border: 'none', height: '1px', background: 'repeating-linear-gradient(90deg, #004d66, #004d66 4px, transparent 4px, transparent 8px)', margin: '50px 0', width: '100%' }} />
 
-            {/* PHASE 0: INTERACTIVE HARWARE ROUTING */}
-            <div style={{ width: '100%', marginBottom: '30px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '15px' }}>
-                    <span style={{ color: '#febe0b', fontWeight: 'bold', fontSize: '1.1rem' }}>flynn@mcp:~/phase_0$</span>
-                    <h2 style={{ color: '#00bafa', margin: 0, fontSize: '1.2rem' }}>cat intuition_check.log</h2>
+            {/* PHASE 3: INTERACTIVE CPU BLOCK DIAGRAM */}
+            <div id="phase-3-diagram" style={{ width: '100%', marginBottom: '30px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '15px', flexWrap: 'wrap' }}>
+                    <span className="phase-subheading" style={{ color: '#febe0b', fontWeight: 'bold', fontSize: '1.1rem' }}>flynn@mcp:~/phase_3$</span>
+                    <h2 className="phase-heading" style={{ color: '#00bafa', margin: 0, fontSize: '1.2rem' }}>cat hardware_routing.log</h2>
                 </div>
-                <p style={{ color: '#c0f3ff', margin: 0, lineHeight: '1.6', marginBottom: '20px' }}>
-                    &gt; Now that you've aligned the real-world operational cycles, analyze how custom logic gates process these streams. Select the stages below to track trace currents through the hardware buses.
+                <p className="phase-description" style={{ color: '#c0f3ff', margin: 0, lineHeight: '1.6', marginBottom: '20px' }}>
+                    &gt; Analyze how custom logic gates process data streams. Select the stages below to track trace currents through the hardware buses.
                 </p>
                 <CPUHeartbeat_Group2_FdeDiagram />
             </div>
 
             <hr style={{ border: 'none', height: '1px', background: 'repeating-linear-gradient(90deg, #004d66, #004d66 4px, transparent 4px, transparent 8px)', margin: '50px 0', width: '100%' }} />
 
-            {/* PHASE 2: CULMINATING SYSTEM CONFIGURATION */}
-            <div style={{ width: '100%', marginBottom: '30px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '15px' }}>
-                    <span style={{ color: '#febe0b', fontWeight: 'bold', fontSize: '1.1rem' }}>flynn@mcp:~/phase_2$</span>
-                    <h2 style={{ color: '#00bafa', margin: 0, fontSize: '1.2rem' }}>sudo ./culminating_challenge.exe</h2>
+            {/* PHASE 4: CULMINATING DATA PATH CHALLENGE */}
+            <div id="phase-4-challenge" style={{ width: '100%', marginBottom: '30px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '15px', flexWrap: 'wrap' }}>
+                    <span className="phase-subheading" style={{ color: '#febe0b', fontWeight: 'bold', fontSize: '1.1rem' }}>flynn@mcp:~/phase_4$</span>
+                    <h2 className="phase-heading" style={{ color: '#00bafa', margin: 0, fontSize: '1.2rem' }}>sudo ./culminating_challenge.exe</h2>
                 </div>
-                <p style={{ color: '#c0f3ff', margin: 0, lineHeight: '1.6' }}>
+                <p className="phase-description" style={{ color: '#c0f3ff', margin: 0, lineHeight: '1.6' }}>
                     &gt; [AUTH REQUIRED] You have mapped out execution streams and clocked the register ticks. Now, demonstrate full system control by routing machine code blocks manually.
                 </p>
             </div>
             
             <CPUHeartbeat_Group2_CulminatingActivity />
 
-            <CPUHeartbeat_Group2_CitationsPanel />
+            <CPUHeartbeat_Group2_CitationsPanel initialOpen={refsOpen} />
         </div>
     );
 }

@@ -30,7 +30,8 @@ export default function CulminatingActivity() {
     const [stepIdx, setStepIdx] = useState(0);
     const [errorGlitch, setErrorGlitch] = useState(false);
     const [successWave, setSuccessWave] = useState(false);
-    const [showHint, setShowHint] = useState(false); // New state for the hint bulb
+    const [showHint, setShowHint] = useState(false);
+    const [errorFeedback, setErrorFeedback] = useState(null);
 
     // --- CYBER-TECH PALETTE CONFIGURATION ---
     const ACCENTS = {
@@ -63,24 +64,36 @@ export default function CulminatingActivity() {
         } catch (e) { console.log("Audio context not initialized"); }
     };
 
+    const BUS_FEEDBACK = {
+        PC_TO_MAR: { wrong: "Not yet! You need to find the memory address first. The Program Counter holds where to look.", why: "The PC→MAR connection is always the first step in a fetch cycle." },
+        RAM_TO_IR: { wrong: "You haven't gotten the address to memory yet! Route PC→MAR first.", why: "RAM can't be read until MAR tells it which address to access." },
+        IR_TO_CU: { wrong: "The Control Unit can't decode nothing! You need to fetch the instruction from RAM first.", why: "The CU needs an instruction in the IR before it can decode anything." },
+        RAM_TO_REG: { wrong: "The CU hasn't decoded the instruction yet! Send it to the Control Unit first.", why: "The CU must know what to do before routing data to registers." },
+        REG_TO_ALU: { wrong: "The ALU needs data from registers, but you haven't decoded the command yet!", why: "The CU must set up the ALU operation before sending operands." },
+        ALU_TO_REG: { wrong: "The ALU hasn't computed anything yet! Send operands to the ALU first.", why: "Results can only be routed back after the ALU performs its operation." }
+    };
+
     const triggerBusConnection = (busId) => {
         if (isCompleted) return;
 
         if (busId === currentStep.target) {
-            playTone(587.33, 'triangle', 0.15); // Confirm tone
-            setShowHint(false); // Hide the hint for the next step!
+            playTone(587.33, 'triangle', 0.15);
+            setShowHint(false);
+            setErrorFeedback(null);
             
             if (stepIdx + 1 >= mission.steps.length) {
                 setSuccessWave(true);
-                playTone(880, 'sine', 0.4); // Win tone
+                playTone(880, 'sine', 0.4);
                 setStepIdx(stepIdx + 1);
             } else {
                 setStepIdx(stepIdx + 1);
             }
         } else {
             setErrorGlitch(true);
-            playTone(150, 'sawtooth', 0.25); // Error buzzer
+            playTone(150, 'sawtooth', 0.25);
+            setErrorFeedback(BUS_FEEDBACK[busId] || { wrong: "That's not the right pathway for this step.", why: "Check the objective and try a different connection." });
             setTimeout(() => setErrorGlitch(false), 400);
+            setTimeout(() => setErrorFeedback(null), 4000);
         }
     };
 
@@ -92,7 +105,7 @@ export default function CulminatingActivity() {
     };
 
     return (
-        <div style={{ backgroundColor: '#0a0c0D', padding: '30px', borderRadius: '16px', border: `2px solid ${successWave ? ACCENTS.YELLOW : errorGlitch ? ACCENTS.PINK : '#202425'}`, color: '#f0fafa', fontFamily: '"Inter", sans-serif', position: 'relative', overflow: 'hidden', transition: 'all 0.2s ease', maxWidth: '900px', margin: '30px auto' }}>
+        <div style={{ backgroundColor: '#0a0c0D', padding: '30px', borderRadius: '16px', border: `2px solid ${successWave ? ACCENTS.YELLOW : errorGlitch ? ACCENTS.PINK : '#202425'}`, color: '#f0fafa', fontFamily: '"JetBrains Mono", monospace', position: 'relative', overflow: 'hidden', transition: 'all 0.2s ease', maxWidth: '900px', margin: '30px auto', boxSizing: 'border-box', width: '100%' }}>
             
             {/* CSS ANIMATIONS & FONT INJECTIONS */}
             <style>
@@ -107,9 +120,24 @@ export default function CulminatingActivity() {
                         80% { transform: translate(2px, 2px); }
                         100% { transform: translate(0); filter: hue-rotate(0deg); }
                     }
+                    @keyframes fadeIn {
+                        0% { opacity: 0; transform: translateY(-5px); }
+                        100% { opacity: 1; transform: translateY(0); }
+                    }
                     .glitch-active { animation: matrixGlitch 0.2s infinite linear; border: 2px solid ${ACCENTS.PINK} !important; }
-                    .bus-line-btn { background: #0a0c0D; border: 1px solid #202425; color: #afafaf; padding: 12px 16px; borderRadius: 8px; cursor: pointer; text-align: left; transition: all 0.2s; font-family: 'JetBrains Mono', monospace; }
+                    .bus-line-btn { background: #0a0c0D; border: 1px solid #202425; color: #afafaf; padding: 12px 16px; border-radius: 8px; cursor: pointer; text-align: left; transition: all 0.2s; font-family: 'JetBrains Mono', monospace; }
                     .bus-line-btn:hover { background: #202425; color: #f0fafa; border-color: ${ACCENTS.CYAN}; transform: translateY(-2px); }
+                    .bus-line-btn:focus-visible { outline: 2px solid ${ACCENTS.CYAN}; outline-offset: 2px; }
+                    @media (max-width: 480px) {
+                        .bus-grid { grid-template-columns: 1fr !important; }
+                        .culminating-mission { font-size: 0.8rem !important; }
+                        .culminating-code { font-size: 0.85rem !important; }
+                        .culminating-goal { font-size: 0.8rem !important; }
+                        .culminating-bus-label { font-size: 0.75rem !important; }
+                        .culminating-success { font-size: 1.3rem !important; }
+                        .bus-line-btn { padding: 10px 12px !important; }
+                        .bus-line-btn span:first-child { font-size: 1rem !important; }
+                    }
                 `}
             </style>
 
@@ -117,8 +145,8 @@ export default function CulminatingActivity() {
                 {/* HEADER */}
                 <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '2px solid #202425', paddingBottom: '15px', marginBottom: '20px', flexWrap: 'wrap', gap: '15px', alignItems: 'center' }}>
                     <div>
-                        <span style={{ color: ACCENTS.CYAN, fontSize: '0.9rem', fontWeight: 'bold', letterSpacing: '2px', textTransform: 'uppercase', fontFamily: '"Bebas Neue", sans-serif' }}>⚙️ Mission {currentMissionIdx + 1}</span>
-                        <h3 style={{ margin: '5px 0 0 0', fontSize: '1.4rem', color: '#f0fafa', fontFamily: '"JetBrains Mono", monospace' }}>Code: <span style={{ color: ACCENTS.PURPLE }}>{mission.instruction}</span></h3>
+                        <span className="culminating-mission" style={{ color: ACCENTS.CYAN, fontSize: '0.9rem', fontWeight: 'bold', letterSpacing: '2px', textTransform: 'uppercase', fontFamily: '"Bebas Neue", sans-serif' }}>⚙️ Mission {currentMissionIdx + 1}</span>
+                        <h3 className="culminating-code" style={{ margin: '5px 0 0 0', fontSize: '1.4rem', color: '#f0fafa', fontFamily: '"JetBrains Mono", monospace' }}>Code: <span style={{ color: ACCENTS.PURPLE }}>{mission.instruction}</span></h3>
                     </div>
                     <div style={{ textAlign: 'right' }}>
                         <span style={{ fontSize: '0.8rem', color: '#afafaf', textTransform: 'uppercase', letterSpacing: '1px' }}>Routing Progress</span>
@@ -127,7 +155,7 @@ export default function CulminatingActivity() {
                 </div>
 
                 {/* OBJECTIVE */}
-                <div style={{ background: '#202425', padding: '15px', borderRadius: '8px', borderLeft: `4px solid ${ACCENTS.CYAN}`, marginBottom: '25px' }}>
+                <div className="culminating-goal" style={{ background: '#202425', padding: '15px', borderRadius: '8px', borderLeft: `4px solid ${ACCENTS.CYAN}`, marginBottom: '25px' }}>
                     <strong style={{ color: ACCENTS.CYAN, fontSize: '1.1rem', textTransform: 'uppercase', fontFamily: '"Bebas Neue", sans-serif', letterSpacing: '1px' }}>The Goal:</strong>
                     <p style={{ margin: '5px 0 0 0', fontSize: '0.95rem', color: '#f0fafa', lineHeight: '1.6' }}>{mission.objective}</p>
                 </div>
@@ -136,7 +164,7 @@ export default function CulminatingActivity() {
                     <div>
                         {/* CONTROL PANEL HEADER WITH HINT BUTTON */}
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '15px' }}>
-                            <h4 style={{ color: '#afafaf', fontSize: '0.85rem', textTransform: 'uppercase', margin: 0, letterSpacing: '1px', fontFamily: '"Inter", sans-serif'}}>Control Panel: Select the correct data pathway</h4>
+                            <h4 style={{ color: '#afafaf', fontSize: '0.85rem', textTransform: 'uppercase', margin: 0, letterSpacing: '1px', fontFamily: '"JetBrains Mono", monospace'}}>Control Panel: Select the correct data pathway</h4>
                             <button 
                                 onClick={() => setShowHint(!showHint)} 
                                 style={{ 
@@ -157,8 +185,16 @@ export default function CulminatingActivity() {
                             </div>
                         )}
 
+                        {/* WRONG ANSWER FEEDBACK */}
+                        {errorFeedback && (
+                            <div style={{ background: 'rgba(254, 0, 111, 0.1)', padding: '12px 15px', borderRadius: '8px', border: `1px solid ${ACCENTS.PINK}`, marginBottom: '20px', color: '#f0fafa', fontSize: '0.9rem', lineHeight: '1.5', animation: 'fadeIn 0.3s ease' }}>
+                                <strong style={{ color: ACCENTS.PINK }}>Wrong Pathway!</strong> {errorFeedback.wrong}
+                                <br/><span style={{ color: '#afafaf', fontSize: '0.8rem' }}>{errorFeedback.why}</span>
+                            </div>
+                        )}
+
                         {/* INTERACTIVE BUS MATRIX */}
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '12px' }}>
+                        <div className="bus-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '12px' }}>
                             <button className="bus-line-btn" onClick={() => triggerBusConnection("PC_TO_MAR")}>
                                 <span style={{ display: 'block', color: '#f0fafa', fontWeight: 'bold', marginBottom: '6px', fontFamily: '"Bebas Neue", sans-serif', fontSize: '1.2rem', letterSpacing: '1px' }}>📍 Find Address</span>
                                 <span style={{ fontSize: '0.85rem', fontFamily: '"JetBrains Mono", monospace' }}>🔌 Route: <span style={{ color: ACCENTS.CYAN }}>PC ➔ MAR</span></span>
@@ -188,11 +224,11 @@ export default function CulminatingActivity() {
                 ) : (
                     /* SUCCESS SCREEN */
                     <div style={{ textAlign: 'center', padding: '40px 20px', background: `${ACCENTS.YELLOW}10`, borderRadius: '10px', border: `1px dashed ${ACCENTS.YELLOW}` }}>
-                        <h3 style={{ color: ACCENTS.YELLOW, fontSize: '2.2rem', margin: '0 0 15px 0', fontFamily: '"Bebas Neue", sans-serif', letterSpacing: '2px' }}>🎉 EXECUTION SUCCESSFUL!</h3>
+                        <h3 className="culminating-success" style={{ color: ACCENTS.YELLOW, fontSize: '2.2rem', margin: '0 0 15px 0', fontFamily: '"Bebas Neue", sans-serif', letterSpacing: '2px' }}>🎉 EXECUTION SUCCESSFUL!</h3>
                         <p style={{ color: '#f0fafa', maxWidth: '550px', margin: '0 auto 25px auto', fontSize: '1rem', lineHeight: '1.6' }}>
                             You successfully took a high-level command and routed it through the physical hardware! This is exactly what your computer does billions of times per second.
                         </p>
-                        <button onClick={nextMission} style={{ background: ACCENTS.YELLOW, color: '#0a0c0D', padding: '14px 35px', border: 'none', borderRadius: '8px', fontWeight: 'bold', fontSize: '1.1rem', cursor: 'pointer', boxShadow: `0 0 20px ${ACCENTS.YELLOW}40`, transition: 'transform 0.2s', fontFamily: '"Inter", sans-serif' }} onMouseOver={(e) => e.target.style.transform = 'scale(1.05)'} onMouseOut={(e) => e.target.style.transform = 'scale(1)'}>
+                        <button onClick={nextMission} style={{ background: ACCENTS.YELLOW, color: '#0a0c0D', padding: '14px 35px', border: 'none', borderRadius: '8px', fontWeight: 'bold', fontSize: '1.1rem', cursor: 'pointer', boxShadow: `0 0 20px ${ACCENTS.YELLOW}40`, transition: 'transform 0.2s', fontFamily: '"JetBrains Mono", monospace' }} onMouseOver={(e) => e.target.style.transform = 'scale(1.05)'} onMouseOut={(e) => e.target.style.transform = 'scale(1)'}>
                             Load Next Mission ➡️
                         </button>
                     </div>
